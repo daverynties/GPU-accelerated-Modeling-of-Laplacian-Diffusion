@@ -11,9 +11,9 @@ extern void fillArray(int *a, int size);
 
 int main()
 {
-	clock_t start, diff;
-	// Declare the array and initialize to 0
-	float initialTemperature[SIZEOFARRAY];
+ clock_t start, diff;
+  // Declare the array and initialize to 0
+   float initialTemperature[SIZEOFARRAY];
 	float temperatureAfterTimeX[SIZEOFARRAY];
 	int i;
 	for (i = 0; i <= SIZEOFARRAY + 1; i++) {
