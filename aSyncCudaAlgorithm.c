@@ -24,7 +24,7 @@ __global__ void kernel(float* u, float* v) {
 int main() {
 	num_t *u, *uDev, *v, *vDev;
 	int size1 = N * sizeof(num_t);
-	int size2 = 30000;
+	int size2 = 300;
 	
 	//initialization of dev_a and dev_b
 	cudaMalloc((void**)&uDev, size1);
