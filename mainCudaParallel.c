@@ -21,7 +21,11 @@ __global__ void kernel(float* u) {
 int main() {
 	num_t *dev_a, *dev_b;
 	int size = N * sizeof(num_t);
-	int time = 30000;
+	int time = 3000;
+
+	cudaEvent_t start, stop;
+	cudaEventCreate(&start);
+	cudaEventCreate(&stop);
 	
 	//initialization of dev_a and dev_b
 	cudaMalloc((void**)&dev_a, size);
@@ -45,16 +49,24 @@ int main() {
 
 	//compute the heat equation by sending a copy of the vector to the kernal
 	//   at each iteration < time
+	cudaEventRecord(start);
 	for (int k = 0; k < time; k++) {
 		cudaMemcpy(dev_b, dev_a, size, cudaMemcpyHostToDevice);
 		kernel << <dimBlock, dimThreads >> > (dev_b);
 		cudaMemcpy(dev_a, dev_b, size, cudaMemcpyDeviceToHost);
 	}
+	cudaEventRecord(stop);
+
+	cudaEventSynchronize(stop);
+	float milliseconds = 0;
+	cudaEventElapsedTime(&milliseconds, start, stop);
 
 	//print vector to console
 	for (int j = 0; j<N; j++) {
 		printf(" %g", dev_a[j]);
 	}
+
+	printf("\n\nExecution Time: %fms\n", milliseconds);
 
 	//release memory
 	free(dev_a);
